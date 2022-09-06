@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  server:
+    build:
+      context: .
+    container_name: orders-app
+    depends_on:
+      - postgres
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PGUSER=test_user
+      - PGHOST=postgres
+      - PGPASSWORD=123456
+      - PGDATABASE=test_db
+      - PGPORT=5432
+      
+
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "test_db"
+      POSTGRES_USER: "test_user"
+      POSTGRES_PASSWORD: "123456"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
